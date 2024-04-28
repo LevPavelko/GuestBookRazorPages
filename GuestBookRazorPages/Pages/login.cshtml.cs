@@ -15,15 +15,19 @@ namespace GuestBookRazorPages.Pages.GuestBook
         {
             repo = r;
         }
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            return Page();
         }
-        public async Task<IActionResult> OnLoginAsync(LoginModel loginModel)
+
+        [BindProperty]
+        public LoginModel login { get; set; } = default!;
+        public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
 
-                var users = await repo.Login(loginModel.Login);
+                var users = await repo.Login(login.Login);
                 if (users == null)
                 {
                     ModelState.AddModelError("", "Wrong login or password!");
@@ -33,7 +37,7 @@ namespace GuestBookRazorPages.Pages.GuestBook
                 string? salt = users.Salt;
 
 
-                byte[] password = Encoding.Unicode.GetBytes(salt + loginModel.Password);
+                byte[] password = Encoding.Unicode.GetBytes(salt + login.Password);
 
 
                 byte[] byteHash = SHA256.HashData(password);

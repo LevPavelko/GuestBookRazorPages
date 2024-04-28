@@ -55,6 +55,8 @@ namespace GuestBookRazorPages.Pages.GuestBook
                 user.Salt = salt;
                 repo.CreateUser(user);
                 repo.Save();
+                HttpContext.Session.SetString("FirstName", user.FirstName);
+                HttpContext.Session.SetString("LastName", user.LastName);
                 return RedirectToPage("./Index");
             }
 
